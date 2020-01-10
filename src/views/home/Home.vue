@@ -12,9 +12,10 @@
       <home-swiper :lists="lists"></home-swiper>
       <recommend-view :recommends="recommends"></recommend-view>
       <feature-view></feature-view>
-      <tab-control class="tab-control"
-                   :titles="['流行','新款','精选']"
-                   @tabClick="tabClick"></tab-control>
+      <tab-control
+        :titles="['流行','新款','精选']"
+        @tabClick="tabClick"
+        ref="tabControl"></tab-control>
       <goods-list :goods="showGoods"></goods-list>
     </scroll>
     <back-top @click.native="backClick()" v-show="isShowBackTop"></back-top>
@@ -36,6 +37,7 @@
 
   import {getHomeMultidata} from "network/home";
   import {getHomeGoods} from "../../network/home";
+  import {debounce} from "../../common/utils";
 
   export default {
     name: "Home",
@@ -61,7 +63,8 @@
           'sell': {page: 0, list: []},
         },
         currentType: 'pop',
-        isShowBackTop: false
+        isShowBackTop: false,
+        tabOffsetTop: 0
       }
     },
     computed: {
@@ -78,10 +81,23 @@
       this.getHomeGoods('new');
       this.getHomeGoods('sell');
     },
+    mounted() {
+      //监听item图片加载完成
+      const refresh = debounce(this.$refs.scroll.refresh, 200)
+
+      this.$bus.$on('itemImageLoad', () => {
+        // console.log("监听图片")
+        refresh()
+      })
+
+      //获取tabControl的tabOffsetTop
+      console.log(this.$refs.tabControl.$el)
+    },
     methods: {
       /**
        * 事件监听相关方法
        */
+
       tabClick(index) {
         switch (index) {
           case 0:
@@ -105,7 +121,7 @@
         //调用之前封装好的方法
         this.getHomeGoods(this.currentType)
 
-        
+
         // this.$refs.scroll.scroll.refresh()
       },
       /**
@@ -148,12 +164,6 @@
     left: 0;
     right: 0;
     top: 0;
-    z-index: 9;
-  }
-
-  .tab-control {
-    position: sticky;
-    top:44px;
     z-index: 9;
   }
 

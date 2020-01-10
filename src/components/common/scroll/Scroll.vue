@@ -33,15 +33,19 @@
           pullUpLoad: this.pullUpLoad
       })
       //监听滚动
-      this.scroll.on('scroll', (position) => {
-        //拿到滑动位置，发送出去
-         this.$emit('scroll',position)
-      })
-      //监听上拉事件
-      this.scroll.on('pullingUp', () => {
-          this.$emit('pullingUp')
-      })
+      if(this.prototype ===2 || this.prototype ===3) {
+        this.scroll.on('scroll', (position) => {
+          //拿到滑动位置，发送出去
+          this.$emit('scroll',position)
+        })
+      }
 
+      //监听上拉事件
+      if(this.pullUpLoad) {
+        this.scroll.on('pullingUp', () => {
+          this.$emit('pullingUp')
+        })
+      }
 
     },
     methods: {
@@ -50,6 +54,10 @@
       },
       finishPullUp() {
         this.scroll.finishPullUp()
+      },
+      refresh() {
+        console.log("测试防抖")
+        this.scroll && this.scroll.refresh()
       }
     }
   }
