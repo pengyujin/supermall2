@@ -85,6 +85,7 @@
       //监听item图片加载完成
       const refresh = debounce(this.$refs.scroll.refresh, 200)
 
+      //商品图片加载的时候，从GoodsItem里面用bus发送事件出来，这里接收处理
       this.$bus.$on('itemImageLoad', () => {
         // console.log("监听图片")
         refresh()

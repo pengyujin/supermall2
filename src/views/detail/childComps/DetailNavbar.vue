@@ -29,6 +29,8 @@
     methods: {
       titleClick(index) {
         this.currentIndex = index
+        //将点击的位置传出去，实现点击跳转到指定页面的位置
+        this.$emit('titleClick', index)
       },
       backClick() {
         this.$router.go(-1)
